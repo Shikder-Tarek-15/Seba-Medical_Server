@@ -28,6 +28,7 @@ async function run() {
 
 
     const userCollection = client.db("sebaDB").collection("users");
+    const campCollection = client.db("sebaDB").collection("camps");
 
 
     // jwt related api
@@ -99,6 +100,11 @@ async function run() {
         const result = await userCollection.insertOne(user);
         res.send(result);
       });
+
+      app.get('/camps', async(req,res)=>{
+        const result = await campCollection.find().toArray()
+        res.send(result)
+      })
 
 
 
