@@ -102,8 +102,32 @@ async function run() {
       });
 
       app.get('/camps', async(req,res)=>{
-        const result = await campCollection.find().toArray()
-        res.send(result)
+        let query = {};
+        let sortOptions = {};
+
+        if (req.query.search) {
+          const searchRegex = new RegExp(req.query.search, 'i');
+          query = { ...query, campName: { $regex: searchRegex } };
+        }
+
+        if (req.query.sort) {
+          switch (req.query.sort) {
+            case 'mostRegistered':
+              sortOptions = { participantCount: -1 };
+              break;
+            case 'campFees':
+              sortOptions = { campFees: 1 };
+              break;
+            case 'alphabeticalOrder':
+              sortOptions = { campName: 1 };
+              break;
+            default:
+              break;
+          }
+        }
+
+        const camps = await campCollection.find(query).sort(sortOptions).toArray();
+        res.json(camps);
       })
 
 
