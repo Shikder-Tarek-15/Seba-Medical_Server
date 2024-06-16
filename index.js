@@ -4,7 +4,7 @@ const app = express();
 const jwt = require('jsonwebtoken');
 require("dotenv").config();
 const port = process.env.PORT || 5000;
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 //middleware
 app.use(cors());
@@ -13,7 +13,7 @@ app.use(express.json());
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.rtcbpiy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
-
+console.log(uri);
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
   serverApi: {
@@ -29,6 +29,7 @@ async function run() {
 
     const userCollection = client.db("sebaDB").collection("users");
     const campCollection = client.db("sebaDB").collection("camps");
+    const participantCampCollection = client.db("sebaDB").collection("participantCamp");
 
 
     // jwt related api
@@ -101,6 +102,12 @@ async function run() {
         res.send(result);
       });
 
+      app.post("/participant_camp", async(req,res)=>{
+        const data = req.body;
+        const result = await participantCampCollection.insertOne(data);
+        res.send(result)
+      })
+
       app.get('/camps', async(req,res)=>{
         let query = {};
         let sortOptions = {};
@@ -128,6 +135,13 @@ async function run() {
 
         const camps = await campCollection.find(query).sort(sortOptions).toArray();
         res.json(camps);
+      })
+
+      app.get('/camp-details/:id', async(req, res)=>{
+        const id = req.params.id;
+        const query = {_id: new ObjectId(id)};
+        const result = await campCollection.findOne(query);
+        res.send(result)
       })
 
 
