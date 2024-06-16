@@ -142,7 +142,18 @@ async function run() {
         const query = {_id: new ObjectId(id)};
         const result = await campCollection.findOne(query);
         res.send(result)
-      })
+      });
+
+      app.patch("/camp_patch/:id", async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) };
+        const update = {
+          $inc: { participantCount: 1 }
+        };
+        const result = await campCollection.updateOne(query, update);
+        res.send(result);
+      });
+      
 
 
 
