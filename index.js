@@ -108,6 +108,14 @@ async function run() {
         res.send(result)
       })
 
+      app.post('/participant/:email', async(req, res)=>{
+        const email = req.params.email;
+        const query = {participantEmail: email}
+        console.log('tarek',query);
+        const result = await participantCampCollection.find(query).toArray()
+        res.send(result)
+      })
+
       app.get('/camps', async(req,res)=>{
         let query = {};
         let sortOptions = {};
