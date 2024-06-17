@@ -70,10 +70,10 @@ async function run() {
       };
 
        // users related api
-    app.get("/users", verifyToken, verifyAdmin, async (req, res) => {
-        const result = await userCollection.find().toArray();
-        res.send(result);
-      });
+    // app.get("/users", verifyToken, verifyAdmin, async (req, res) => {
+    //     const result = await userCollection.find().toArray();
+    //     res.send(result);
+    //   });
   
       app.get("/users/admin/:email", verifyToken, async (req, res) => {
         const email = req.params.email;
@@ -102,7 +102,7 @@ async function run() {
         res.send(result);
       });
 
-      app.post("/participant_camp", async(req,res)=>{
+      app.post("/participant_camp",  async(req,res)=>{
         const data = req.body;
         const result = await participantCampCollection.insertOne(data);
         res.send(result)
@@ -139,7 +139,7 @@ async function run() {
 
      
 
-      app.post('/camps', async(req, res)=>{
+      app.post('/camps', verifyToken,  async(req, res)=>{
         const data = req.body;
         const result = await campCollection.insertOne(data);
         res.send(result)
