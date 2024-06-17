@@ -137,6 +137,42 @@ async function run() {
         res.json(camps);
       })
 
+     
+
+      app.post('/camps', async(req, res)=>{
+        const data = req.body;
+        const result = await campCollection.insertOne(data);
+        res.send(result)
+      })
+
+      app.delete('/delete-camp/:id', async(req, res)=>{
+        const id = req.params.id;
+        const query = {_id: new ObjectId(id)}
+        const result = await campCollection.deleteOne(query);
+        res.send(result)
+      })
+
+      app.put('/update-camp/:campId', async(req, res)=>{
+        const id = req.params.campId;
+        const data = req.body;
+        const query = {_id: new ObjectId(id)};
+
+        const updateData = {
+          $set: {
+            campName: data.campName,
+            image: data.image,
+            campFees: data.campFees,
+            dateTime: data.dateTime,
+            location: data.location,
+            healthcareProfessionalName: data.healthcareProfessionalName,
+            description: data.description,
+          }
+        }
+
+        const result = await campCollection.updateOne(query, updateData);
+        res.send(result)
+      })
+
       app.get('/camp-details/:id', async(req, res)=>{
         const id = req.params.id;
         const query = {_id: new ObjectId(id)};
