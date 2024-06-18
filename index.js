@@ -126,6 +126,13 @@ async function run() {
         res.send(result)
       })
 
+      app.delete("/participant_camp/:id", async(req, res)=>{
+        const id = req.params.id;
+        const query = {_id: new ObjectId(id)}
+        const result = await participantCampCollection.deleteOne(query);
+        res.send(result)
+      })
+
       app.post('/participant/:email', async(req, res)=>{
         const email = req.params.email;
         const query = {participantEmail: email}
