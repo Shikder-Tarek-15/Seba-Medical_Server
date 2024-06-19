@@ -32,6 +32,7 @@ async function run() {
     const userCollection = client.db("sebaDB").collection("users");
     const campCollection = client.db("sebaDB").collection("camps");
     const participantCampCollection = client.db("sebaDB").collection("participantCamp");
+    const feedbackCollection = client.db("sebaDB").collection("feedback");
 
 
     // jwt related api
@@ -138,6 +139,26 @@ async function run() {
         const query = {participantEmail: email}
         console.log('tarek',query);
         const result = await participantCampCollection.find(query).toArray()
+        console.log('shikder',result);
+        res.send(result)
+      })
+
+      app.put('/update-confirmation/:id', async(req, res)=>{
+        const id = req.params.id;
+        const query = {_id: new ObjectId(id)}
+        const updateData = {
+          $set: {
+             confirmationStatus: 'Confirmed' 
+          }
+        }
+        const result = await participantCampCollection.updateOne(query, updateData);
+        res.send(result)
+
+      })
+
+      app.post('/feedback', async(req,res)=>{
+        const data = req.body;
+        const result = await feedbackCollection.insertOne(data)
         res.send(result)
       })
 
