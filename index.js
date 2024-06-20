@@ -33,6 +33,7 @@ async function run() {
     const campCollection = client.db("sebaDB").collection("camps");
     const participantCampCollection = client.db("sebaDB").collection("participantCamp");
     const feedbackCollection = client.db("sebaDB").collection("feedback");
+    const newsletterEmailCollection = client.db("sebaDB").collection("newsletterEmail");
 
 
     // jwt related api
@@ -164,6 +165,12 @@ async function run() {
 
       app.get('/feedback', async(req, res)=>{
         const result = await feedbackCollection.find().toArray()
+        res.send(result )
+      })
+
+      app.post('/newsletter', async(req, res)=>{
+        const data = req.body;
+        const result = await newsletterEmailCollection.insertOne(data)
         res.send(result)
       })
 
