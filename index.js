@@ -162,6 +162,11 @@ async function run() {
         res.send(result)
       })
 
+      app.get('/feedback', async(req, res)=>{
+        const result = await feedbackCollection.find().toArray()
+        res.send(result)
+      })
+
       app.post('/participantPayment/:campId', async(req, res)=>{
         const id = req.params.campId;
         const query  = {_id: new ObjectId(id)}
