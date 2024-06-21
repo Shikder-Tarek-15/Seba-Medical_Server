@@ -228,7 +228,12 @@ async function run() {
         res.json(camps);
       })
 
-     
+      app.get('/manageCamps', async(req, res)=>{
+        const page = parseInt(req.query.page);
+        const size = parseInt(req.query.size);
+        const result = await campCollection.find().skip(page * size).limit(size).toArray();
+        res.send(result)
+      })
 
       app.post('/camps', verifyToken, verifyAdmin, async(req, res)=>{
         const data = req.body;
@@ -279,6 +284,12 @@ async function run() {
         };
         const result = await campCollection.updateOne(query, update);
         res.send(result);
+      });
+
+      // Pagination
+      app.get('/campCount', async(req, res)=>{
+        const count = await campCollection.estimatedDocumentCount()
+        res.send({count})
       });
       
 
