@@ -12,7 +12,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 app.use(
   cors({
     origin: [
-      "http://localhost:5173",
+      // "http://localhost:5173",
       "https://seba-medical.web.app",
       "https://seba-medical.firebaseapp.com",
     ]
