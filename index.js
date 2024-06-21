@@ -137,7 +137,9 @@ async function run() {
       })
 
       app.get('/participant_camp', verifyToken, verifyAdmin, async(req, res)=>{
-        const result = await participantCampCollection.find().toArray()
+        const page = parseInt(req.query.page);
+        const size = parseInt(req.query.size);
+        const result = await participantCampCollection.find().skip(page * size).limit(size).toArray();
         res.send(result)
       })
 
@@ -289,6 +291,11 @@ async function run() {
       // Pagination
       app.get('/campCount', async(req, res)=>{
         const count = await campCollection.estimatedDocumentCount()
+        res.send({count})
+      });
+
+      app.get('/participantCampCount', async(req, res)=>{
+        const count = await participantCampCollection.estimatedDocumentCount()
         res.send({count})
       });
       
