@@ -153,9 +153,9 @@ async function run() {
       app.post('/participant/:email',verifyToken, async(req, res)=>{
         const email = req.params.email;
         const query = {participantEmail: email}
-        console.log('tarek',query);
-        const result = await participantCampCollection.find(query).toArray()
-        console.log('shikder',result);
+        const page = parseInt(req.query.page);
+        const size = parseInt(req.query.size);
+        const result = await participantCampCollection.find(query).skip(page * size).limit(size).toArray();
         res.send(result)
       })
 
