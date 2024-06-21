@@ -12,9 +12,9 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 app.use(
   cors({
     origin: [
-      // "http://localhost:5173",
-      "seba-medical.web.app",
-      "seba-medical.firebaseapp.com",
+      "http://localhost:5173",
+      "https://seba-medical.web.app",
+      "https://seba-medical.firebaseapp.com",
     ]
   })
 );
@@ -114,7 +114,7 @@ async function run() {
         res.send(result);
       });
 
-      app.post("/create-payment-intent", async (req, res) => {
+      app.post("/create-payment-intent",verifyToken, async (req, res) => {
         const { campFees } = req.body;
         
         const floatPrice = parseFloat(campFees)
@@ -130,20 +130,25 @@ async function run() {
         });
       });
 
-      app.post("/participant_camp",  async(req,res)=>{
+      app.post("/participant_camp",verifyToken,  async(req,res)=>{
         const data = req.body;
         const result = await participantCampCollection.insertOne(data);
         res.send(result)
       })
 
-      app.delete("/participant_camp/:id", async(req, res)=>{
+      app.get('/participant_camp', verifyToken, verifyAdmin, async(req, res)=>{
+        const result = await participantCampCollection.find().toArray()
+        res.send(result)
+      })
+
+      app.delete("/participant_camp/:id",verifyToken, async(req, res)=>{
         const id = req.params.id;
         const query = {_id: new ObjectId(id)}
         const result = await participantCampCollection.deleteOne(query);
         res.send(result)
       })
 
-      app.post('/participant/:email', async(req, res)=>{
+      app.post('/participant/:email',verifyToken, async(req, res)=>{
         const email = req.params.email;
         const query = {participantEmail: email}
         console.log('tarek',query);
@@ -152,7 +157,7 @@ async function run() {
         res.send(result)
       })
 
-      app.put('/update-confirmation/:id', async(req, res)=>{
+      app.put('/update-confirmation/:id',verifyToken,verifyAdmin, async(req, res)=>{
         const id = req.params.id;
         const query = {_id: new ObjectId(id)}
         const updateData = {
@@ -165,7 +170,7 @@ async function run() {
 
       })
 
-      app.post('/feedback', async(req,res)=>{
+      app.post('/feedback',verifyToken, async(req,res)=>{
         const data = req.body;
         const result = await feedbackCollection.insertOne(data)
         res.send(result)
@@ -182,7 +187,7 @@ async function run() {
         res.send(result)
       })
 
-      app.post('/participantPayment/:campId', async(req, res)=>{
+      app.post('/participantPayment/:campId',verifyToken, async(req, res)=>{
         const id = req.params.campId;
         const query  = {_id: new ObjectId(id)}
         const updateData = {
@@ -225,20 +230,20 @@ async function run() {
 
      
 
-      app.post('/camps', verifyToken,  async(req, res)=>{
+      app.post('/camps', verifyToken, verifyAdmin, async(req, res)=>{
         const data = req.body;
         const result = await campCollection.insertOne(data);
         res.send(result)
       })
 
-      app.delete('/delete-camp/:id', async(req, res)=>{
+      app.delete('/delete-camp/:id', verifyToken, verifyAdmin, async(req, res)=>{
         const id = req.params.id;
         const query = {_id: new ObjectId(id)}
         const result = await campCollection.deleteOne(query);
         res.send(result)
       })
 
-      app.put('/update-camp/:campId', async(req, res)=>{
+      app.put('/update-camp/:campId', verifyToken, verifyAdmin, async(req, res)=>{
         const id = req.params.campId;
         const data = req.body;
         const query = {_id: new ObjectId(id)};
@@ -266,7 +271,7 @@ async function run() {
         res.send(result)
       });
 
-      app.patch("/camp_patch/:id", async (req, res) => {
+      app.patch("/camp_patch/:id",verifyToken, async (req, res) => {
         const id = req.params.id;
         const query = { _id: new ObjectId(id) };
         const update = {
