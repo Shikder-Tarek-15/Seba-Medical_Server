@@ -299,6 +299,15 @@ async function run() {
         res.send({count})
       });
       
+      app.get('/paymentHistoryCount/:email', async(req, res)=>{
+        const email = req.params.email;
+        const query = {email: email}
+        const count = await participantCampCollection.estimatedDocumentCount(query)
+        res.send({count})
+      });
+      
+      
+      
 
 
 
