@@ -1,6 +1,6 @@
 ## Installation
 **Clone the Repository:** <br>
-  git clone https://github.com/Shikder-Tarek-15/Seba-Medical_Server.git
+  git clone https://github.com/Shikder-Tarek-15/Seba-Medical_Server.git <br>
   cd seba-medical-server
 
 **Install Dependencies:** <br>
